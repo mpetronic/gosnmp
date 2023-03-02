@@ -994,7 +994,7 @@ func (sp *UsmSecurityParameters) unmarshal(flags SnmpV3MsgFlags, packet []byte, 
 	}
 	if msgAuthenticationParameters, ok := rawMsgAuthParameters.(string); ok {
 		sp.AuthenticationParameters = msgAuthenticationParameters
-		sp.Logger.Printf("Parsed authenticationParameters %s", msgAuthenticationParameters)
+		sp.Logger.Printf("Parsed authenticationParameters %0x", []byte(msgAuthenticationParameters))
 	}
 	// blank msgAuthenticationParameters to prepare for authentication check later
 	if flags&AuthNoPriv > 0 {
@@ -1014,7 +1014,7 @@ func (sp *UsmSecurityParameters) unmarshal(flags SnmpV3MsgFlags, packet []byte, 
 	cursor += count
 	if msgPrivacyParameters, ok := rawMsgPrivacyParameters.(string); ok {
 		sp.PrivacyParameters = []byte(msgPrivacyParameters)
-		sp.Logger.Printf("Parsed privacyParameters %s", msgPrivacyParameters)
+		sp.Logger.Printf("Parsed privacyParameters %0x", []byte(msgPrivacyParameters))
 		if flags&AuthPriv >= AuthPriv {
 			if sp.PrivacyProtocol <= NoPriv {
 				return 0, errors.New("error parsing SNMPv3 User Security Model: privacy parameters are not configured to parse incoming encrypted message")

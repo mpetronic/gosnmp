@@ -393,7 +393,7 @@ func (x *GoSNMP) unmarshalV3Header(packet []byte,
 
 	if MsgFlags, ok := rawMsgFlags.(string); ok {
 		response.MsgFlags = SnmpV3MsgFlags(MsgFlags[0])
-		x.Logger.Printf("parsed msg flags %s", MsgFlags)
+		x.Logger.Printf("parsed msg flags: %v", []byte{MsgFlags[0]})
 	}
 
 	rawSecModel, count, err := parseRawField(x.Logger, packet[cursor:], "msgSecurityModel")
@@ -481,7 +481,7 @@ func (x *GoSNMP) decryptPacket(packet []byte, cursor int, response *SnmpPacket) 
 
 		if contextEngineID, ok := rawContextEngineID.(string); ok {
 			response.ContextEngineID = contextEngineID
-			x.Logger.Printf("Parsed contextEngineID %s", contextEngineID)
+			x.Logger.Printf("Parsed contextEngineID: [%0x]", []byte(contextEngineID))
 		}
 		rawContextName, count, err := parseRawField(x.Logger, packet[cursor:], "contextName")
 		if err != nil {
@@ -494,7 +494,7 @@ func (x *GoSNMP) decryptPacket(packet []byte, cursor int, response *SnmpPacket) 
 
 		if contextName, ok := rawContextName.(string); ok {
 			response.ContextName = contextName
-			x.Logger.Printf("Parsed contextName %s", contextName)
+			x.Logger.Printf("Parsed contextName: [%0x]", []byte(contextName))
 		}
 
 	default:

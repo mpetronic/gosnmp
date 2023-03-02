@@ -5,6 +5,7 @@
 package gosnmp
 
 import (
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"net"
@@ -205,6 +206,22 @@ func (t *TrapListener) SendUDP(packet *SnmpPacket, addr *net.UDPAddr) error {
 	return nil
 }
 
+func (t *TrapListener) hexDump(packet []byte) {
+	s := hex.EncodeToString(packet)
+	ss := ""
+
+	for i := 0; i < len(s); i += 2 {
+		if i%16 == 0 {
+			ss += "   "
+		}
+		if i%32 == 0 {
+			ss += "\n"
+		}
+		ss += s[i:i+2] + " "
+	}
+	t.Params.Logger.Printf(ss)
+}
+
 func (t *TrapListener) listenUDP(addr string) error {
 	// udp
 
@@ -241,6 +258,7 @@ func (t *TrapListener) listenUDP(addr string) error {
 			}
 
 			msg := buf[:rlen]
+			t.hexDump(msg)
 			trap, err := t.Params.UnmarshalTrap(msg, false)
 			if err != nil {
 				t.Params.Logger.Printf("TrapListener: error in UnmarshalTrap %s\n", err)
