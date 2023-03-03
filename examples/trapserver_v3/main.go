@@ -47,7 +47,7 @@ func main() {
 		Logger: tl.Params.Logger,
 	}
 
-	err := tl.Listen("0.0.0.0:9162")
+	err := tl.Listen("127.0.0.1:9162")
 	if err != nil {
 		log.Panicf("error in listen: %s", err)
 	}

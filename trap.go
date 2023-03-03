@@ -238,6 +238,7 @@ func (t *TrapListener) listenUDP(addr string) error {
 
 	// Mark that we are listening now.
 	t.listening <- true
+	t.Params.Logger.Printf("Trap server up, Listening on : %v", udpAddr)
 
 	for {
 		switch {
@@ -258,7 +259,7 @@ func (t *TrapListener) listenUDP(addr string) error {
 			}
 
 			msg := buf[:rlen]
-			t.hexDump(msg)
+			// t.hexDump(msg)
 			trap, err := t.Params.UnmarshalTrap(msg, false)
 			if err != nil {
 				t.Params.Logger.Printf("TrapListener: error in UnmarshalTrap %s\n", err)
